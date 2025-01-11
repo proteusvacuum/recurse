@@ -155,6 +155,47 @@ assert solve([9, 8, 7, 6, 5, 4, 3], 3) == [9, 8, 7, 6, 5], solve(
 )
 
 
+# 9 According to Won, there's an O(n) solution...
+# (This one is O(n))...
+def solve(nums, k):
+    from collections import deque
+
+    max_nums = []
+    maximum_idxs = deque()
+    # stores the index of the current maximum in sorted order, a "monotonic queue"
+    for i in range(k):
+        while maximum_idxs and nums[i] >= nums[maximum_idxs[-1]]:
+            maximum_idxs.pop()
+        maximum_idxs.append(i)
+
+    max_nums = [nums[maximum_idxs[0]]]
+    for i in range(k, len(nums)):
+        window_start = i - k
+        while maximum_idxs and maximum_idxs[0] <= window_start:
+            # If the current maximum is now outside of our window, we discard it
+            print(1, i, maximum_idxs)
+            maximum_idxs.popleft()
+
+        while maximum_idxs and nums[i] >= nums[maximum_idxs[-1]]:
+            # Remove all the items that are smaller than the current item
+            print(2, i, maximum_idxs)
+            maximum_idxs.pop()
+        maximum_idxs.append(i)
+        max_nums.append(nums[maximum_idxs[0]])
+    return max_nums
+
+
+# assert solve([1, 3, -1, -3, 5, 3, 6, 7], 3) == [3, 3, 5, 5, 6, 7], solve(
+#     [1, 3, -1, -3, 5, 3, 6, 7], 3
+# )
+# assert solve([9, 8, 7, 6, 5, 4, 3], 3) == [9, 8, 7, 6, 5], solve(
+#     [9, 8, 7, 6, 5, 4, 3], 3
+# )
+assert solve([1, 2, 3, 4, 5, 6, 7, 8], 3) == [3, 4, 5, 6, 7, 8], solve(
+    [1, 2, 3, 4, 5, 6, 7, 8], 3
+)
+
+
 # 10
 def solve(nums):
     snums = sorted(set(num for num in nums if num > 0))
