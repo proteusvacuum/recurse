@@ -111,6 +111,7 @@ assert solve([1, 3, -1, -3, 5, 3, 6, 7], 3) == [3, 3, 5, 5, 6, 7], solve(
 
 
 # 9 According to Won, there's an O(n) solution...
+# (This one is O(kn))
 def solve(nums, k):
     from collections import deque
 
@@ -131,8 +132,15 @@ def solve(nums, k):
         window.popleft()
         window.append(current_num)
         window_max_idx -= 1
-        if window_max_idx < 0 or current_num >= window_max:
-            # we popped off the maximum number in the window, or our new number is the new maximum
+        if window_max_idx < 0:
+            # we popped off the maximum number in the window, we need to find the new max:
+            window_max = window[0]
+            window_max_idx = 0
+            for i in range(1, k):
+                if window[i] >= window_max:
+                    window_max = window[i]
+                    window_max_idx = i
+        if current_num >= window_max:
             window_max = current_num
             window_max_idx = k - 1
         max_nums.append(window_max)
@@ -141,6 +149,9 @@ def solve(nums, k):
 
 assert solve([1, 3, -1, -3, 5, 3, 6, 7], 3) == [3, 3, 5, 5, 6, 7], solve(
     [1, 3, -1, -3, 5, 3, 6, 7], 3
+)
+assert solve([9, 8, 7, 6, 5, 4, 3], 3) == [9, 8, 7, 6, 5], solve(
+    [9, 8, 7, 6, 5, 4, 3], 3
 )
 
 
