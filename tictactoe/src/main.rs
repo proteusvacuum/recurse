@@ -17,24 +17,21 @@ fn main() {
             println!("Wrong number of coordinates!");
             continue;
         }
-        let x = if let Ok(val) = usize::from_str_radix(player_move[0], 10) {
+        let x = if let Ok(val) = player_move[0].parse::<usize>() {
             val
         } else {
             println!("Invalid coordiate");
             continue;
         };
-        let y = if let Ok(val) = usize::from_str_radix(player_move[1], 10) {
+        let y = if let Ok(val) = player_move[0].parse::<usize>() {
             val
         } else {
             println!("Invalid coordinate");
             continue;
         };
-        match game.make_move(x, y) {
-            Err(msg) => {
-                println!("{}", msg);
-                continue;
-            }
-            _ => {}
+        if let Err(msg) = game.make_move(x, y) {
+            println!("{}", msg);
+            continue;
         }
         if let Some(winner) = game.winner() {
             println!("The winner is {winner}!");
@@ -61,6 +58,6 @@ mod tests {
         let mut game = GameState::new();
         let result = game.make_move(3, 3);
         assert_eq!(result, Err("Out of bounds".to_string()));
-        assert!(matches!(result, Err(_)));
+        assert!(result.is_err());
     }
 }
